@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <main class="container">
+    <table role="grid">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">
+            Name <a href="/job/name"><ion-icon name="funnel-outline" style="font-size: 0.6em;"></ion-icon></a>
+          </th>
+          <th scope="col">
+            Type <a href="/job/type"><ion-icon name="funnel-outline" style="font-size: 0.6em;"></ion-icon></a>
+          </th>
+          <th scope="col">
+            Status <a href="/job/status"><ion-icon name="funnel-outline" style="font-size: 0.6em;"></ion-icon></a>
+          </th>
+          <th scope="col">Location</th>
+          <th scope="col">Started</th>
+          <th scope="col">
+            Endtime <a href="/job/endtime"><ion-icon name="funnel-outline" style="font-size: 0.6em;"></ion-icon></a>
+          </th>
+          <!-- <th scope="col">More</th> -->
+        </tr>
+      </thead>
+      <h2>Jobs list:</h2>
+      <tbody>
+        {% for job in jobs_name_order %}
+          <tr>
+            <th scope="row">{{ job.id }}</th>
+            <td>
+              <strong><a href="/job{{ job.id }}">{{ job.name }}</a></strong>
+            </td>
+            <td>{{ job.job_type }}</td>
+            <td>{{ job.status }}</td>
+            <td>
+              <!-- {{ job.location }} -->
+              Show <a href="/jobs_map{{ job.id }}"><ion-icon name="map-outline"></ion-icon></a>
+            </td>
+            <td>{{ job.start_time.date() }}</td>
+            <td>{{ job.end_time.date() }}</td>
+            <!--        <td>
+              <details>
+                <summary>More</summary>
+                <small>{{ job.info }}</small>
+                <small><br />Days left: {{ job.days_left() }}</small>
+              </details>
+            </td>        -->
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+{% endblock %}

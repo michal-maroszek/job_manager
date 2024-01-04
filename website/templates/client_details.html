@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <main class="container">
+    <h3>Edit client data:</h3>
+    <form method="post">
+      <div class="grid">
+        <label for="firstname">First name<input type="text" id="firstname" name="firstname" value="{{ current_client.firstname }}" required /></label>
+        <label for="lastname">Last name<input type="text" id="lastname" name="lastname" value="{{ current_client.lastname }}" required /></label>
+      </div>
+      <div class="grid">
+        <label for="company">Company name<input type="text" id="company" name="company" value="{{ current_client.company }}" required /></label>
+        <label for="adress">Address<input type="text" id="adress" name="adress" value="{{ current_client.adress }}" required /></label>
+      </div>
+      <div class="grid">
+        <label for="phone">Phone<input type="text" id="phone" name="phone" value="{{ current_client.phone }}" required /></label>
+        <label for="email">Email<input type="email" id="email" name="email" value="{{ current_client.email }}" required /></label>
+      </div>
+      <label for="info">Additional informations<input type="text" id="info" name="info" value="{{ current_client.info }}" /></label>
+      <button type="submit">Update</button>
+      <details>
+        <summary role="button" class="contrast">More</summary>
+        <a role="button" href="/delete_client{{ current_client.id }}">Delete Client</a>
+        <p>This action cannot be undone. Are you sure you want to delete this client?</p>
+      </details>
+    </form>
+  </main>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <main class="container">
+    <details>
+      <summary role="button">Add new client</summary>
+      <form method="post">
+        <div class="grid">
+          <label for="firstname">First name<input type="text" id="firstname" name="firstname" placeholder="First name" required /></label>
+          <label for="lastname">Last name<input type="text" id="lastname" name="lastname" placeholder="Last name" required /></label>
+        </div>
+        <div class="grid">
+          <label for="company">Company name<input type="text" id="company" name="company" placeholder="Company name" required /></label>
+          <label for="adress">Address<input type="text" id="adress" name="adress" placeholder="Address" required /></label>
+        </div>
+        <div class="grid">
+          <label for="phone">Phone<input type="text" id="phone" name="phone" placeholder="+48 200 300 400" required /></label>
+          <label for="email">Email<input type="email" id="email" name="email" placeholder="email@web.com" required /></label>
+        </div>
+        <label for="info">Additional informations<input type="text" id="info" name="info" placeholder="Additional informations" /></label>
+        <button type="submit">Add</button>
+      </form>
+    </details>
+
+    <table role="grid">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Company</th>
+          <th scope="col">Address</th>
+          <th scope="col">Phone</th>
+          <th scope="col">Email</th>
+          <th scope="col">More</th>
+        </tr>
+      </thead>
+      <h2>Clients:</h2>
+      <tbody>
+        {% for client in user.clients %}
+          <tr>
+            <th scope="row">{{ client.id }}</th>
+            <td>
+              <strong><a href="/client{{ client.id }}">{{ client.firstname }} {{ client.lastname }}</a></strong>
+            </td>
+            <td>{{ client.company }}</td>
+            <td>{{ client.adress }}</td>
+            <td>{{ client.phone }}</td>
+            <td>{{ client.email }}</td>
+            <td>
+              <details>
+                <summary>More</summary>
+                <small>{{ client.info }}</small>
+              </details>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+{% endblock %}

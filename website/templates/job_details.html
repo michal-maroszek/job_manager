@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <main class="container">
+    <form method="post">
+      <label for="name">Job name<input type="text" id="name" name="name" value="{{ current_job.name }}" required /></label>
+      <div class="grid">
+        <label for="client">
+          Client: <strong>{{ current_job_client }}</strong><select name="client" id="client" required>
+            {% for client in user.clients %}
+              <option value="{{ client.id }}">{{ client.company }}, {{ client.firstname }} {{ client.lastname }}</option>
+            {% endfor %}
+          </select>
+        </label>
+
+        <label for="location">Job location<input type="text" id="location" name="location" value="{{ current_job.location }}" required /></label>
+      </div>
+      <div class="grid">
+        <label for="job_type">
+          Job type: <strong>{{ current_job.job_type }}</strong><select name="job_type" id="job_type" required>
+            <option value="Map for design">Map for design</option>
+            <option value="Division">Division</option>
+            <option value="Resumption of border signs">Resumption of border signs</option>
+            <option value="Map for legal purposes">Map for legal purposes</option>
+            <option value="As-built inventory">As-built inventory</option>
+          </select>
+        </label>
+        <label for="status">
+          Job status: <strong>{{ current_job.status }}</strong><select name="status" id="status" required>
+            <option value="Started">Started</option>
+            <option value="Field work">Field work</option>
+            <option value="Office work">Office work</option>
+            <option value="Submitted">Submitted</option>
+            <option value="Finished">Finished</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid">
+        <label for="date">Started: <strong>{{ current_job.start_time.date() }}</strong><input type="date" id="start_time" name="start_time" value="{{ current_start_time }}" required /></label>
+        <label for="date">End time: <strong>{{ current_job.end_time.date() }}</strong><input type="date" id="end_time" name="end_time" value="{{ current_end_time }}" required /></label>
+      </div>
+      <label for="info">Job info<input type="text" id="info" name="info" value="{{ current_job.info }}" /></label>
+      <button type="submit">Update</button>
+    </form>
+  </main>
+{% endblock %}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+    <title>Job manager</title>
+  </head>
+  <body>
+    <nav class="container">
+      <ul>
+        {% if user.is_authenticated %}
+          <li>
+            <a href="/jobs_list">Jobs</a>
+          </li>
+          <li>
+            <a href="/clients">Clients</a>
+          </li>
+          <li>
+            <a href="/jobs_map">Map</a>
+          </li>
+          <li>
+            <a href="/logout" class="secondary">Logout</a>
+          </li>
+        {% else %}
+          <li>
+            <a href="/"><strong>Home</strong></a>
+          </li>
+          <li>
+            <a href="/signup" class="contrast outline">Sign up</a>
+          </li>
+          <li>
+            <a href="/login" class="secondary">Login</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+    <!-- showin pop up messages flashed from sign up function -->
+    {% with messages = get_flashed_messages(with_categories = true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'signup_error' %}
+            <dialog open>
+              <article>
+                <header style="background-color: lightcoral;">
+                  <a href="/signup" aria-label="Close" class="close"></a>
+                  Something went wrong..
+                </header>
+                <p>{{ message }}</p>
+              </article>
+            </dialog>
+          {% elif category == 'signup_success' %}
+            <dialog open>
+              <article>
+                <header style="background-color: lightgreen;">
+                  <a href="/login" aria-label="Close" class="close"></a>
+                  Success!
+                </header>
+                <p>{{ message }}</p>
+              </article>
+            </dialog>
+          {% elif category == 'login_error' %}
+            <dialog open>
+              <article>
+                <header style="background-color: lightcoral;">
+                  <a href="/login" aria-label="Close" class="close"></a>
+                  Something went wrong..
+                </header>
+                <p>{{ message }}</p>
+              </article>
+            </dialog>
+          {% elif category == 'job_error' %}
+            <dialog open>
+              <article>
+                <header style="background-color: lightcoral;">
+                  <a href="/jobs_list" aria-label="Close" class="close"></a>
+                  Something went wrong..
+                </header>
+                <p>{{ message }}</p>
+              </article>
+            </dialog>
+          {% elif category == 'job_success' %}
+            <dialog open>
+              <article>
+                <header style="background-color: lightgreen;">
+                  <a href="/jobs_list" aria-label="Close" class="close"></a>
+                  Success!
+                </header>
+                <p>{{ message }}</p>
+              </article>
+            </dialog>
+          {% elif category == 'client_error' %}
+            <dialog open>
+              <article>
+                <header style="background-color: lightcoral;">
+                  <a href="/clients" aria-label="Close" class="close"></a>
+                  Something went wrong..
+                </header>
+                <p>{{ message }}</p>
+              </article>
+            </dialog>
+          {% elif category == 'client_success' %}
+            <dialog open>
+              <article>
+                <header style="background-color: lightgreen;">
+                  <a href="/clients" aria-label="Close" class="close"></a>
+                  Success!
+                </header>
+                <p>{{ message }}</p>
+              </article>
+            </dialog>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}
+
+    {% endblock %}
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  </body>
+</html>

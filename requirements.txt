@@ -1,0 +1,6 @@
+Flask-Login
+Flask-SQLAlchemy
+geopy==2.*
+folium==0.*
+Werkzeug
+gunicorn
