@@ -1,10 +1,13 @@
+from dotenv import load_dotenv
+from os import path
+from flask import Flask
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
 import os
 
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from os import path
+# REMEMBER: Add imports in alphabetical order !!!
 
+load_dotenv()
 
 # Initialazing a DB
 db = SQLAlchemy()
