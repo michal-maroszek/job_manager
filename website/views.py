@@ -227,23 +227,6 @@ def filter_jobs(filter):
     else:
         return redirect(url_for("views.jobs_list"))
 
-    """
-    jobs_type_order = None
-    jobs_status_order = None
-    jobs_endtime_order = None
-
-    return redirect(url_for("views.jobs_list"))
-
-    return render_template(
-        "job_details.html",
-        user=current_user,
-        current_job=current_job,
-        current_start_time=current_start_time,
-        current_end_time=current_end_time,
-        current_job_client=current_job_client,
-    )
-    """
-
 
 # ----------------------------------------------------------------
 # Jobs map
