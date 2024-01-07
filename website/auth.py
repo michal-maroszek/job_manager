@@ -77,7 +77,6 @@ def signup():
                 validate_email(
                     email_address=email,
                     check_format=config.EMAIL_FORMAT,
-                    check_dns=config.EMAIL_DNS,
                 )
                 != True
             ):
