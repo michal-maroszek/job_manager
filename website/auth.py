@@ -1,8 +1,13 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, login_required, logout_user, current_user
 from . import db, config
+from .models import User
+from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask_login import login_user, login_required, logout_user, current_user
+from password_validator import PasswordValidator
+from validate_email import validate_email
+from werkzeug.security import generate_password_hash, check_password_hash
+
+# REMEMBER: Add imports in alphabetical order !!!
+
 
 auth = Blueprint("auth", __name__)
 
@@ -15,7 +20,7 @@ def login():
 
         user = User.query.filter_by(
             email=email  # checking if user exists
-        ).first()  # .first() return first occurance of given email,
+        ).first()  # .first() return first occurrence of given email,
         if user:
             if check_password_hash(
                 user.password, password
@@ -55,25 +60,29 @@ def signup():
 
         user = User.query.filter_by(
             email=email
-        ).first()  # .first() return first occurance of given email
+        ).first()  # .first() return first occurrence of given email
         if user:  # just some input checking stuff
             flash("User with this email already exists!", category="signup_error")
         else:
             if len(first_name) < config.MIN_NAME_LENGTH:
                 flash("Provide correct first name", category="signup_error")
-            elif len(password) < config.MIN_PASSWORD_LENGTH:
+            elif config.PW_VALIDATION_SCHEMA.validate(password) != True:
                 flash(
-                    "Your password must be at least 6 characters long",
+                    "Your password must be at least 8 characters long, contain uppercase and lowercase letters and at least one number and symbol",
                     category="signup_error",
                 )
             elif password != password_conf:
                 flash("Confirm your password", category="signup_error")
-            elif len(email) < config.MIN_EMAIL_LENGTH or "@" not in email:
-                # TODO: In a production system, the email validation would likely need to
-                #  be improved a little bit, to catch more incorrect values, like: "joe@@example.com".
-                #  Here you could rely on existing solutions like https://pypi.org/project/email-validator/
-                #  Also, it is best practice not to "hardcode" constants but
-                #  store them in a configuration file.
+            elif (
+                validate_email(
+                    email_address=email,
+                    check_format=config.EMAIL_FORMAT,
+                    check_blacklist=config.EMAIL_BLACKLIST,
+                    check_dns=config.EMAIL_DNS,
+                    check_smtp=config.EMAIL_SMTP,
+                )
+                != True
+            ):
                 flash("Provide correct email", category="signup_error")
             else:
                 # creating new user instance
@@ -82,11 +91,8 @@ def signup():
                     lastname=last_name,
                     password=generate_password_hash(
                         password, method="pbkdf2:sha1", salt_length=8
-                    ),  # hashing password for security purposes
-                    # FIXME: in a production system, it is a security best practice
-                    #  that this should be a hash to avoid plain-text passwords
-                    #  leaking when a database breach occurs - for instance.
-                    #  For more info on that see:
+                    ),  # hashing password for security
+                    #  more info about authentication see:
                     #  https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html
                     email=email,
                     company=company,
@@ -97,27 +103,3 @@ def signup():
                 return redirect(url_for("auth.login"))
 
     return render_template("signup.html", user=current_user)
-
-
-"""
-        if user:
-            if check_password_hash(
-                user.password, password
-            ):  # checking if password is the same (hashed)
-                login_user(user, remember=True)
-                return redirect(url_for("views.jobs_list"))
-
-
-
-
-            else:
-                # creating new user instance
-                new_user = User(
-                    firstname=first_name,
-                    lastname=last_name,
-                    password=generate_password_hash(
-                        password, method="sha256"
-                    ),  # hashing password for security purposes
-                    email=email,
-                    company=company,
-"""

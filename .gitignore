@@ -1,5 +1,6 @@
 .DS_Store
 instance/.DS_Store
+instance/database.db
 website/.DS_Store
 website/static/home-background.jpeg
 TO_DO.txt
