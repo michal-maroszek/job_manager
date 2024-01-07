@@ -20,15 +20,14 @@ def get_coords(address):
     if Job.location:
         geolocator = Nominatim(user_agent="job_manager")
         location = geolocator.geocode(address)
-        if location == int:
-            try:
-                lat = location.latitude
-                lon = location.longitude
-                return lat, lon
-            except (AttributeError, TypeError, ValueError):
-                return (None, None)
-        else:
+        try:
+            lat = location.latitude
+            lon = location.longitude
+            return lat, lon
+        except (AttributeError, TypeError, ValueError):
             return (None, None)
+    else:
+        return (None, None)
 
 
 @views.route("/")
@@ -255,9 +254,17 @@ def jobs_map():
                 continue
 
         # calculating average coords to center the map based on all jobs markers
-        avg_lat = sum(all_jobs_lat) / len(all_jobs_lat)
-        avg_lon = sum(all_jobs_lon) / len(all_jobs_lon)
-        average_coords = (avg_lat, avg_lon)
+        try:
+            avg_lat = sum(all_jobs_lat) / len(all_jobs_lat)
+            avg_lon = sum(all_jobs_lon) / len(all_jobs_lon)
+            average_coords = (avg_lat, avg_lon)
+        except ZeroDivisionError:
+            map = folium.Map(
+                location=(51.9189046, 19.1343786), zoom_start=5, control_scale=True
+            )
+            return render_template(
+                "jobs_map.html", user=current_user, map=map._repr_html_()
+            )
 
         map = folium.Map(location=average_coords, zoom_start=9, control_scale=True)
 
@@ -275,7 +282,7 @@ def jobs_map():
                 continue
     else:
         map = folium.Map(
-            location=(51.9189046, 19.1343786), zoom_start=10, control_scale=True
+            location=(51.9189046, 19.1343786), zoom_start=5, control_scale=True
         )
 
     return render_template("jobs_map.html", user=current_user, map=map._repr_html_())

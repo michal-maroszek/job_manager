@@ -1,15 +1,32 @@
 from . import db, config
 from .models import User
+from email_validator import validate_email, EmailNotValidError
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from password_validator import PasswordValidator
-from validate_email import validate_email
+import re
+
+# from validate_email import validate_email
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # REMEMBER: Add imports in alphabetical order !!!
 
 
 auth = Blueprint("auth", __name__)
+
+# Simple email validator ----------------
+
+regex = re.compile(config.EMAIL_SCHEMA)
+
+
+def validate_email(email):
+    if re.fullmatch(regex, email):
+        return True
+    else:
+        return False
+
+
+# ----------------------------------------
 
 
 @auth.route("/login", methods=["GET", "POST"])
@@ -73,13 +90,7 @@ def signup():
                 )
             elif password != password_conf:
                 flash("Confirm your password", category="signup_error")
-            elif (
-                validate_email(
-                    email_address=email,
-                    check_format=config.EMAIL_FORMAT,
-                )
-                != True
-            ):
+            elif validate_email(email) != True:
                 flash("Provide correct email", category="signup_error")
             else:
                 # creating new user instance
