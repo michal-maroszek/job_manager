@@ -1,3 +1,4 @@
+dotenv
 Flask-Login
 Flask-SQLAlchemy
 email-validator==1.*
